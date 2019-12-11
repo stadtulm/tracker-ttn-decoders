@@ -4,8 +4,13 @@ function Decoder(bytes, port) {
     // Decode an uplink message from a buffer
     // (array) of bytes to an object of fields.
     var value = bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
+    var validLocation = false;
     if (bytes[0] & 0x80) {
         value |= 0xFFFFFFFF00000000;
+    } else {
+        if (value !== 0) {
+            validLocation = true;
+        }
     }
     var latitude = value / 1000000; //gps latitude,units: °
     value = bytes[4] << 24 | bytes[5] << 16 | bytes[6] << 8 | bytes[7];
@@ -37,9 +42,7 @@ function Decoder(bytes, port) {
         value |= 0xFFFF0000;
     }
     var pitch = value / 100; //pitch,units: °
-    return {
-        latitude: latitude,
-        longitude: longitude,
+    var result = {
         roll: roll,
         pitch: pitch,
         batV: batV,
@@ -48,4 +51,9 @@ function Decoder(bytes, port) {
         MD: motion_mode,
         LON: led_updown,
     };
+    if (validLocation) {
+        result['latitude'] = latitude;
+        result['longitude'] = longitude;
+    }
+    return result;
 }
