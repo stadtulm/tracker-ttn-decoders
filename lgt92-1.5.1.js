@@ -1,4 +1,5 @@
-//The function is :
+//modified copy from http://www.dragino.com/downloads/downloads/LGT_92/LGT-92_LoRa_GPS_Tracker_UserManual_v1.5.0.pdf
+
 function Decoder(bytes, port) {
     // Decode an uplink message from a buffer
     // (array) of bytes to an object of fields.
